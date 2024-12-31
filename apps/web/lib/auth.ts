@@ -25,16 +25,33 @@ export const authOptions = {
   },
   session: { strategy: "jwt" as SessionStrategy },
   callbacks: {
-    async jwt({ token }: any) {
+    async jwt({ token, trigger, session }: any) {
+    
+      if(trigger === "update" && session?.name){
+        token.name = session.name;
+        
+        await db.user.update({
+          where:{
+            id:token.sub,
+          },
+          data:{
+            name:token.name
+          }
+        })
+      }
       return token;
     },
-    async session({ session, token }: any) {
+
+
+    async session({ session, token, trigger }: any) {
       const user = await db.user.findUnique({
         where: {
           id: token.sub,
         },
       });
+
       if (token) {
+        session.user.name = token.name
         session.accessToken = token.accessToken;
         session.user.id = token.sub;
         session.user.admin = user?.admin;

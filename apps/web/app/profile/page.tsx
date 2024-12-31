@@ -1,16 +1,18 @@
-import { getServerSession } from "next-auth";
+import { getServerSession } from "next-auth"; 
 import React from "react";
-import { authOptions } from "../../lib/auth";
-import { redirect } from "next/navigation";
+import { authOptions } from "../../lib/auth"; 
+import { redirect } from "next/navigation"; 
 import { UserRound } from "lucide-react";
 import UserDetailForm from "../../components/UserDetailForm";
 
 export default async function Profile() {
+  
   const session = await getServerSession(authOptions);
 
   if (!session || !session?.user) {
     redirect("/auth");
   }
+
   return (
     <div>
       <header className="border-b-2 p-3">
@@ -24,7 +26,7 @@ export default async function Profile() {
       </header>
 
       <main className="p-3">
-        <UserDetailForm user={session?.user} />
+        <UserDetailForm/>
       </main>
     </div>
   );
